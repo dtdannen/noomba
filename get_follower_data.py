@@ -16,6 +16,7 @@ RelayMessage
 import os
 import json
 from loguru import logger
+import asyncio
 
 
 async def setup_db():
@@ -77,6 +78,7 @@ async def subscribe_for_followers(client, conn, user_npub_hex_list):
 
     class NotificationHandler(HandleNotification):
         def __init__(self):
+            pass
 
         async def handle(self, relay_url: str, subscription_id: str,event: Event):
             logger.info(f"Received event from {relay_url}: {event}")
@@ -96,9 +98,6 @@ async def subscribe_for_followers(client, conn, user_npub_hex_list):
 
         async def process_kind_3_event(self, db: aiosqlite.Connection, event: Dict[str, Any], follower_pubkey: str):
             async with db.cursor() as cur:
-                # TODO left off here
-                #  need to get current timestamp from the kind_3 event
-                #  need to verify the event is correctly signed
 
                 # Get current followees from the database
                 await cur.execute("SELECT followee FROM followers WHERE follower = ? AND unfollowed = 0",
